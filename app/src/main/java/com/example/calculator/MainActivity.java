@@ -209,7 +209,14 @@ public class MainActivity extends AppCompatActivity {
         }
         setText(str);
     }
-
+    boolean isFunction(String s){
+        for(String it : functions){
+            if(it == s){
+                return true;
+            }
+        }
+        return false;
+    }
     public void onEqualsButtonClick(View w){
         if(str.length() == 0){
             return;
@@ -217,27 +224,6 @@ public class MainActivity extends AppCompatActivity {
         else if(str.length() == 1){
             if(isOperand(str.charAt(0)) || str.charAt(0) == '('){
                 return;
-            }
-        }
-        int countOfNumbers = 0;
-        boolean isNumber = false;
-        for(int i = 0; i < str.length(); i++){
-            if(str.charAt(i) == 'e' || str.charAt(i) == 'p'){
-                countOfNumbers++;
-            }
-            if(isNumber){
-                if(str.charAt(i) >= '0' && str.charAt(i) <= '9'){
-
-                }
-                else if(str.charAt(i) != '.'){
-                    isNumber = false;
-                }
-            }
-            else{
-                if(str.charAt(i) >= '0' && str.charAt(i) <= '9'){
-                    isNumber = true;
-                    countOfNumbers++;
-                }
             }
         }
         for(int i = 0; i < str.length() - 1; i++){
@@ -248,12 +234,130 @@ public class MainActivity extends AppCompatActivity {
         if(str.charAt(str.length() - 1) == '.'){
             str = str.substring(0, str.length() - 1);
         }
-        while(countOfNumbers > 1){
-            isNumber = false;
-            for(int i = 0; i < str.length(); i++){
+        ArrayList<String> splString = new ArrayList<String>();
+        boolean isNumber = false;
+        int start = 0;
+        for(int i = 0; i < str.length(); i++){
+            if(isNumber){
+                if((str.charAt(i) >= '0' && str.charAt(i) <= '9') || str.charAt(i) == '.'){
 
+                }
+                else{
+                    splString.add(str.substring(start, i));
+                    isNumber = false;
+                    switch (str.charAt(i)){
+                        case '+': splString.add("+"); break;
+                        case '-': splString.add("-"); break;
+                        case '*': splString.add("*"); break;
+                        case '/': splString.add("/"); break;
+                        case '^': splString.add("^"); break;
+                    }
+                }
+            }
+            else{
+                if(str.charAt(i) >= '0' && str.charAt(i) <= '9'){
+                    start = i;
+                    isNumber = true;
+                }
+                else{
+                    switch (str.charAt(i)){
+                        case '(': splString.add("("); break;
+                        case ')': splString.add(")"); break;
+                        case 'e': splString.add(str.substring(i, i + 1)); break;
+                        case 'p': splString.add(str.substring(i, i + 2)); break;
+                        case '+': splString.add("+"); break;
+                        case '-': splString.add("-"); break;
+                        case '*': splString.add("*"); break;
+                        case '/': splString.add("/"); break;
+                        case '^': splString.add("^"); break;
+                        case 's':
+                            if(str.charAt(i + 1) == 'i'){
+                                splString.add("sin");
+                                i += 3;
+                            }
+                            else{
+                                splString.add("sqrt");
+                                i += 4;
+                            }
+                            splString.add("(");
+                            break;
+                        case 'c':
+                            splString.add("cos");
+                            splString.add("(");
+                            i += 3;
+                            break;
+                        case 't':
+                            splString.add("tg");
+                            splString.add("(");
+                            i += 2;
+                            break;
+                        case 'l':
+                            if(str.charAt(i + 1) == 'n'){
+                                splString.add("ln");
+                            }
+                            else{
+                                splString.add("lg");
+                            }
+                            splString.add("(");
+                            i += 2;
+                            break;
+                    }
+                }
             }
         }
-        setText(str);
+        if(isNumber){
+            splString.add(str.substring(start));
+        }
+        int count = 0;
+        for(String s : splString){
+            if(s == "("){
+                count++;
+            }
+            else if(s == ")"){
+                count--;
+            }
+        }
+        for(int i = 0; i < count; i++){
+            splString.add(")");
+        }
+        //while(splString.size() > 1){
+            for(int i = 0; i < splString.size(); i++){
+                if(splString.get(i) == "(" && i + 2 < splString.size() - 1 && splString.get(i + 2) == ")"){
+                    if(i > 0 && isFunction(splString.get(i - 1))){
+                        String func = splString.get(i - 1);
+                        switch (func){
+                            case "sin":
+                                splString.set(i - 1, "" + Math.sin(Double.parseDouble(splString.get(i + 1))));
+                                break;
+                            case "cos":
+                                splString.set(i - 1, "" + Math.cos(Double.parseDouble(splString.get(i + 1))));
+                                break;
+                            case "tg":
+                                splString.set(i - 1, "" + Math.tan(Double.parseDouble(splString.get(i + 1))));
+                                break;
+                            case "sqrt":
+                                splString.set(i - 1, "" + Math.sqrt(Double.parseDouble(splString.get(i + 1))));
+                                break;
+                            case "ln":
+                                splString.set(i - 1, "" + Math.log(Double.parseDouble(splString.get(i + 1))));
+                                break;
+                            case "lg":
+                                splString.set(i - 1, "" + Math.log10(Double.parseDouble(splString.get(i + 1))));
+                                break;
+                        }
+                        splString.remove(i + 2);
+                        splString.remove(i + 1);
+                        splString.remove(i);
+                    }
+                    else{
+                        splString.remove(i + 2);
+                        splString.remove(i);
+                    }
+                }
+                //
+            }
+        //}
+        str = splString.get(0);
+        setText(splString.toString());
     }
 }
