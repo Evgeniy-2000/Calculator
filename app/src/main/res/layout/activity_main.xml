@@ -229,6 +229,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onSqrtButtonClick"
                 android:text="sqrt" />
 
             <Button
@@ -236,6 +237,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onSinButtonClick"
                 android:text="sin" />
 
             <Button
@@ -243,6 +245,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onCosButtonClick"
                 android:text="cos" />
 
             <Button
@@ -250,6 +253,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onTgButtonClick"
                 android:text="tg" />
         </LinearLayout>
 
@@ -263,6 +267,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onE_ButtonClick"
                 android:text="e" />
 
             <Button
@@ -270,6 +275,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onPiButtonClick"
                 android:text="pi" />
 
             <Button
@@ -277,6 +283,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onLnButtonClick"
                 android:text="ln" />
 
             <Button
@@ -284,6 +291,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onLgButtonClick"
                 android:text="lg" />
         </LinearLayout>
     </LinearLayout>

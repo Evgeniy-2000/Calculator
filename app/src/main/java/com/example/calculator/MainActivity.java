@@ -70,11 +70,14 @@ public class MainActivity extends AppCompatActivity {
         setText(str);
     }
     public void onEqualsButtonClick(View w){
-        //
+        int leftBreakets = 0, rightBreakets = 0;
+        for(int i = 0; i < str.length(); i++){
+
+        }
         setText(str);
     }
     public void addOperand(String operand){
-        if(str == ""){
+        if(str == "" || str.charAt(str.length() - 1) == '('){
             if(operand == "+" || operand == "-"){
                 str += operand;
             }
@@ -103,8 +106,16 @@ public class MainActivity extends AppCompatActivity {
         addOperand("^");
     }
     public void onDelButtonClick(View w){
-        if(){
-
+        boolean fl = false;
+        int lenghtOfFunction = -1;
+        for(String s : functions){
+            if(str.endsWith(s+"(")){
+                fl = true;
+                lenghtOfFunction = s.length() + 1;
+            }
+        }
+        if(fl){
+            str = str.substring(0, str.length() - lenghtOfFunction);
         }
         else{
             str = str.substring(0, str.length() - 2);
@@ -114,5 +125,46 @@ public class MainActivity extends AppCompatActivity {
     public void onClearButtonClick(View w){
         str = "";
         setText(str);
+    }
+    public boolean isOperand(char operand){
+        for(String s : operands){
+            if(s.charAt(0) == operand){
+                return true;
+            }
+        }
+        return false;
+    }
+    public void addFunction(String function){
+        if(str == "" || str.charAt(str.length()-1) == '(' || isOperand(str.charAt(str.length()-1))){
+            str += function + "(";
+        }
+        else{
+            str += "*" + function + "(";
+        }
+        setText(str);
+    }
+    public void onSinButtonClick(View w){
+        addFunction("sin");
+    }
+    public void onCosButtonClick(View w){
+        addFunction("cos");
+    }
+    public void onTgButtonClick(View w){
+        addFunction("tg");
+    }
+    public void onLnButtonClick(View w){
+        addFunction("ln");
+    }
+    public void onLgButtonClick(View w){
+        addFunction("lg");
+    }
+    public void onSqrtButtonClick(View w){
+        addFunction("sqrt");
+    }
+    public void onE_ButtonClick(View w){
+        addFunction("e");
+    }
+    public void onPiButtonClick(View w){
+        addFunction("pi");
     }
 }
