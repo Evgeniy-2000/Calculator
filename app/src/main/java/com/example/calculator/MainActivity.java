@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     String str = "";
-    String[] operands = new String[]{"+","-","*","/","*"};
+    String[] operands = new String[]{"+","-","*","/","^"};
     String[] functions = new String[]{"sin","cos","tg","ln","lg","sqrt"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,28 +63,51 @@ public class MainActivity extends AppCompatActivity {
         setText(str);
     }
     public void onPointButtonClick(View w){
-        str += ".";
-        setText(str);
+        if(str.length() != 0 && str.charAt(str.length()-1) <= '9' && str.charAt(str.length()-1) >= '0'){
+            int k = 1;
+            while(str.charAt(str.length() - k) <= '9' && str.charAt(str.length() - k) >= '0'){
+                if(k == str.length()){
+                    str += ".";
+                    setText(str);
+                    return;
+                }
+                k++;
+            }
+            if(str.charAt(str.length() - k) != '.') {
+                str += ".";
+                setText(str);
+            }
+        }
     }
     public void onBreaketsButtonClick(View w){
-        //
-        setText(str);
-    }
-    public void onEqualsButtonClick(View w){
         int leftBreakets = 0, rightBreakets = 0;
         for(int i = 0; i < str.length(); i++){
-
+            if(str.charAt(i) == '('){
+                leftBreakets++;
+            }
+            else if(str.charAt(i) == ')'){
+                rightBreakets++;
+            }
+        }
+        if(str.length() == 0 || str.charAt(str.length() - 1) == '(' || isOperand(str.charAt(str.length() - 1))){
+            str += "(";
+        }
+        else if(leftBreakets > rightBreakets){
+            str += ")";
+        }
+        else{
+            str += "*(";
         }
         setText(str);
     }
     public void addOperand(String operand){
-        if(str == "" || str.charAt(str.length() - 1) == '('){
+        if(str.length() == 0 || str.charAt(str.length() - 1) == '('){
             if(operand == "+" || operand == "-"){
                 str += operand;
             }
         }
-        else if(operands.toString().contains(str.substring(str.length()-1))){
-            str = str.substring(0, str.length() - 2) + operand;
+        else if(isOperand(str.charAt(str.length()-1))){
+            str = str.substring(0, str.length() - 1) + operand;
         }
         else{
             str += operand;
@@ -106,10 +130,13 @@ public class MainActivity extends AppCompatActivity {
         addOperand("^");
     }
     public void onDelButtonClick(View w){
+        if(str.length() == 0){
+            return;
+        }
         boolean fl = false;
         int lenghtOfFunction = -1;
         for(String s : functions){
-            if(str.endsWith(s+"(")){
+            if(str.endsWith(s + "(")){
                 fl = true;
                 lenghtOfFunction = s.length() + 1;
             }
@@ -117,8 +144,11 @@ public class MainActivity extends AppCompatActivity {
         if(fl){
             str = str.substring(0, str.length() - lenghtOfFunction);
         }
-        else{
+        else if(str.endsWith("pi")){
             str = str.substring(0, str.length() - 2);
+        }
+        else{
+            str = str.substring(0, str.length() - 1);
         }
         setText(str);
     }
@@ -162,9 +192,68 @@ public class MainActivity extends AppCompatActivity {
         addFunction("sqrt");
     }
     public void onE_ButtonClick(View w){
-        addFunction("e");
+        if(str.length() == 0 || str.charAt(str.length()-1) == '(' || isOperand(str.charAt(str.length()-1))){
+            str += "e";
+        }
+        else{
+            str += "*e";
+        }
+        setText(str);
     }
     public void onPiButtonClick(View w){
-        addFunction("pi");
+        if(str.length() == 0 || str.charAt(str.length()-1) == '(' || isOperand(str.charAt(str.length()-1))){
+            str += "pi";
+        }
+        else{
+            str += "*pi";
+        }
+        setText(str);
+    }
+
+    public void onEqualsButtonClick(View w){
+        if(str.length() == 0){
+            return;
+        }
+        else if(str.length() == 1){
+            if(isOperand(str.charAt(0)) || str.charAt(0) == '('){
+                return;
+            }
+        }
+        int countOfNumbers = 0;
+        boolean isNumber = false;
+        for(int i = 0; i < str.length(); i++){
+            if(str.charAt(i) == 'e' || str.charAt(i) == 'p'){
+                countOfNumbers++;
+            }
+            if(isNumber){
+                if(str.charAt(i) >= '0' && str.charAt(i) <= '9'){
+
+                }
+                else if(str.charAt(i) != '.'){
+                    isNumber = false;
+                }
+            }
+            else{
+                if(str.charAt(i) >= '0' && str.charAt(i) <= '9'){
+                    isNumber = true;
+                    countOfNumbers++;
+                }
+            }
+        }
+        for(int i = 0; i < str.length() - 1; i++){
+            if(str.charAt(i) == '.' && !(str.charAt(i + 1) >= '0' && str.charAt(i + 1) <= '9')){
+                str = str.substring(0, i) + str.substring(i + 1);
+            }
+        }
+        if(str.charAt(str.length() - 1) == '.'){
+            str = str.substring(0, str.length() - 1);
+        }
+        while(countOfNumbers > 1){
+            isNumber = false;
+            for(int i = 0; i < str.length(); i++){
+
+            }
+        }
+        setText(str);
     }
 }
